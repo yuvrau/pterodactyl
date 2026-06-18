@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PteroDocs — Panel Setup Hub</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #060b12;
+    --surface: #0d1520;
+    --surface2: #111d2e;
+    --border: #1a2d45;
+    --accent: #00c8ff;
+    --accent2: #7c3aed;
+    --fix: #f97316;
+    --fix2: #ef4444;
+    --bp: #22c55e;
+    --bp2: #16a34a;
+    --text: #e2eaf5;
+    --muted: #64748b;
+    --code-bg: #070e18;
+    --green: #22c55e;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: 'Space Grotesk', sans-serif; min-height: 100vh; overflow-x: hidden; }
+  body::before { content: ''; position: fixed; inset: 0; background-image: linear-gradient(rgba(0,200,255,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(0,200,255,0.025) 1px, transparent 1px); background-size: 40px 40px; pointer-events: none; z-index: 0; }
+  .orb { position: fixed; border-radius: 50%; filter: blur(130px); pointer-events: none; z-index: 0; opacity: 0.2; }
+  .orb-1 { width: 700px; height: 700px; background: var(--accent2); top: -250px; left: -250px; }
+  .orb-2 { width: 500px; height: 500px; background: var(--accent); bottom: -200px; right: -200px; }
+  .orb-3 { width: 400px; height: 400px; background: var(--bp); top: 40%; left: 60%; opacity: 0.1; }
+
+  /* NAV */
+  nav { position: sticky; top: 0; z-index: 100; backdrop-filter: blur(20px); background: rgba(6,11,18,0.88); border-bottom: 1px solid var(--border); padding: 0 2.5rem; display: flex; align-items: center; justify-content: space-between; height: 64px; }
+  .nav-logo { display: flex; align-items: center; gap: 10px; font-size: 1.05rem; font-weight: 700; letter-spacing: -0.02em; text-decoration: none; color: var(--text); }
+  .nav-logo svg { width: 30px; height: 30px; }
+  .nav-links { display: flex; gap: 4px; }
+  .nav-pill { padding: 6px 14px; border-radius: 8px; font-size: 0.82rem; font-weight: 600; cursor: pointer; border: 1px solid transparent; font-family: 'Space Grotesk', sans-serif; transition: all 0.2s; text-decoration: none; display: flex; align-items: center; gap: 6px; color: var(--muted); }
+  .nav-pill:hover { color: var(--text); border-color: var(--border); background: var(--surface); }
+  .nav-pill.active-install { color: var(--accent); border-color: rgba(0,200,255,0.3); background: rgba(0,200,255,0.07); }
+  .nav-pill.active-fix { color: var(--fix); border-color: rgba(249,115,22,0.3); background: rgba(249,115,22,0.07); }
+  .nav-pill.active-bp { color: var(--bp); border-color: rgba(34,197,94,0.3); background: rgba(34,197,94,0.07); }
+
+  /* HERO */
+  .hero { position: relative; z-index: 1; text-align: center; padding: 110px 2rem 90px; }
+  .hero-badge { display: inline-flex; align-items: center; gap: 8px; background: rgba(0,200,255,0.07); border: 1px solid rgba(0,200,255,0.18); border-radius: 100px; padding: 6px 18px; font-size: 0.78rem; font-family: 'JetBrains Mono', monospace; color: var(--accent); margin-bottom: 2rem; letter-spacing: 0.06em; }
+  .hero-badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); animation: pulse 2s ease-in-out infinite; }
+  @keyframes pulse { 0%,100% { opacity:1; transform:scale(1); } 50% { opacity:0.3; transform:scale(0.7); } }
+  .hero h1 { font-size: clamp(2.8rem, 6vw, 5.5rem); font-weight: 700; letter-spacing: -0.04em; line-height: 1.04; margin-bottom: 1.5rem; }
+  .word-ptero { color: var(--accent); }
+  .word-dactyl { background: linear-gradient(135deg, var(--accent2), #a855f7); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .hero-sub { font-size: 1.1rem; color: var(--muted); max-width: 500px; margin: 0 auto 3.5rem; line-height: 1.75; }
+
+  /* CARDS */
+  .cards { position: relative; z-index: 1; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; max-width: 1000px; margin: 0 auto; padding: 0 2rem 100px; }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 2rem; text-decoration: none; color: var(--text); transition: all 0.25s; display: flex; flex-direction: column; gap: 1rem; }
+  .card:hover { transform: translateY(-4px); }
+  .card.install:hover { border-color: rgba(0,200,255,0.4); box-shadow: 0 24px 48px rgba(0,200,255,0.1); }
+  .card.fix:hover { border-color: rgba(249,115,22,0.4); box-shadow: 0 24px 48px rgba(249,115,22,0.1); }
+  .card.bp:hover { border-color: rgba(34,197,94,0.4); box-shadow: 0 24px 48px rgba(34,197,94,0.1); }
+  .card-icon { width: 52px; height: 52px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; }
+  .card-icon.install { background: rgba(0,200,255,0.1); border: 1px solid rgba(0,200,255,0.2); }
+  .card-icon.fix { background: rgba(249,115,22,0.1); border: 1px solid rgba(249,115,22,0.2); }
+  .card-icon.bp { background: rgba(34,197,94,0.1); border: 1px solid rgba(34,197,94,0.2); }
+  .card-label { font-size: 0.7rem; font-family: 'JetBrains Mono', monospace; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 2px; }
+  .card-label.install { color: var(--accent); }
+  .card-label.fix { color: var(--fix); }
+  .card-label.bp { color: var(--bp); }
+  .card h3 { font-size: 1.3rem; font-weight: 700; letter-spacing: -0.02em; }
+  .card p { font-size: 0.88rem; color: var(--muted); line-height: 1.65; flex: 1; }
+  .card-url { font-size: 0.75rem; font-family: 'JetBrains Mono', monospace; color: var(--muted); margin-top: 0.5rem; display: flex; align-items: center; gap: 6px; }
+  .card-url.install span { color: var(--accent); }
+  .card-url.fix span { color: var(--fix); }
+  .card-url.bp span { color: var(--bp); }
+  .card-arrow { margin-top: auto; font-size: 0.82rem; font-weight: 600; display: flex; align-items: center; gap: 6px; }
+  .card-arrow.install { color: var(--accent); }
+  .card-arrow.fix { color: var(--fix); }
+  .card-arrow.bp { color: var(--bp); }
+
+  footer { position: relative; z-index: 1; text-align: center; padding: 36px 2rem; border-top: 1px solid var(--border); color: var(--muted); font-size: 0.8rem; font-family: 'JetBrains Mono', monospace; }
+  footer span { color: var(--accent); }
+  html { scroll-behavior: smooth; }
+</style>
+</head>
+<body>
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<div class="orb orb-3"></div>
+
+<nav>
+  <a href="index.html" class="nav-logo">
+    <svg viewBox="0 0 32 32" fill="none"><path d="M16 3L29 10v12L16 29 3 22V10L16 3z" fill="none" stroke="#00c8ff" stroke-width="1.5"/><path d="M16 3v26M3 10l13 6 13-6M16 16l13-6M16 16L3 10" stroke="#00c8ff" stroke-width="1" opacity="0.4"/></svg>
+    Ptero<span style="color:var(--accent)">Docs</span>
+  </a>
+  <div class="nav-links">
+    <a href="installation.html" class="nav-pill">🚀 Install</a>
+    <a href="pterofix.html" class="nav-pill">🔧 Ptero Fix</a>
+    <a href="blueprint.html" class="nav-pill">🧩 Blueprint</a>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-badge">pterodactyl panel · complete setup hub</div>
+  <h1><span class="word-ptero">Ptero</span><span class="word-dactyl">Docs</span></h1>
+  <p class="hero-sub">Your all-in-one reference for installing, fixing, and extending Pterodactyl Panel. Pick a guide below.</p>
+</section>
+
+<div class="cards">
+  <a href="installation.html" class="card install">
+    <div class="card-icon install">🚀</div>
+    <div>
+      <div class="card-label install">guide 01</div>
+      <h3>Panel Installation</h3>
+    </div>
+    <p>Fresh server setup from scratch. Includes firewall config, dependency install, and the official Pterodactyl installer script.</p>
+    <div class="card-url install">/&thinsp;<span>installation</span></div>
+    <div class="card-arrow install">Open guide →</div>
+  </a>
+
+  <a href="pterofix.html" class="card fix">
+    <div class="card-icon fix">🔧</div>
+    <div>
+      <div class="card-label fix">guide 02</div>
+      <h3>Ptero Fix</h3>
+    </div>
+    <p>Panel broken or outdated? Repair or update your existing installation — migrations, cache clear, file ownership and more.</p>
+    <div class="card-url fix">/&thinsp;<span>pterofix</span></div>
+    <div class="card-arrow fix">Open guide →</div>
+  </a>
+
+  <a href="blueprint.html" class="card bp">
+    <div class="card-icon bp">🧩</div>
+    <div>
+      <div class="card-label bp">guide 03</div>
+      <h3>Blueprint</h3>
+    </div>
+    <p>Install the Blueprint extension framework on top of Pterodactyl. Enables addon/extension support for your panel.</p>
+    <div class="card-url bp">/&thinsp;<span>blueprint</span></div>
+    <div class="card-arrow bp">Open guide →</div>
+  </a>
+</div>
+
+<footer>Built for <span>Pterodactyl Panel</span> users · Three guides, one hub</footer>
+</body>
+</html>

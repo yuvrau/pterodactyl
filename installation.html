@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Panel Installation — PteroDocs</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root { --bg:#060b12; --surface:#0d1520; --surface2:#111d2e; --border:#1a2d45; --accent:#00c8ff; --accent2:#7c3aed; --fix:#f97316; --fix2:#ef4444; --bp:#22c55e; --text:#e2eaf5; --muted:#64748b; --code-bg:#070e18; --green:#22c55e; }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--text);font-family:'Space Grotesk',sans-serif;min-height:100vh;overflow-x:hidden}
+  body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(0,200,255,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(0,200,255,0.025) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;z-index:0}
+  .orb{position:fixed;border-radius:50%;filter:blur(130px);pointer-events:none;z-index:0;opacity:0.2}
+  .orb-1{width:700px;height:700px;background:var(--accent2);top:-250px;left:-250px}
+  .orb-2{width:500px;height:500px;background:var(--accent);bottom:-200px;right:-200px}
+  nav{position:sticky;top:0;z-index:100;backdrop-filter:blur(20px);background:rgba(6,11,18,0.88);border-bottom:1px solid var(--border);padding:0 2.5rem;display:flex;align-items:center;justify-content:space-between;height:64px}
+  .nav-logo{display:flex;align-items:center;gap:10px;font-size:1.05rem;font-weight:700;letter-spacing:-0.02em;text-decoration:none;color:var(--text)}
+  .nav-logo svg{width:30px;height:30px}
+  .nav-links{display:flex;gap:4px}
+  .nav-pill{padding:6px 14px;border-radius:8px;font-size:0.82rem;font-weight:600;cursor:pointer;border:1px solid transparent;font-family:'Space Grotesk',sans-serif;transition:all 0.2s;text-decoration:none;display:flex;align-items:center;gap:6px;color:var(--muted)}
+  .nav-pill:hover{color:var(--text);border-color:var(--border);background:var(--surface)}
+  .nav-pill.active{color:var(--accent);border-color:rgba(0,200,255,0.3);background:rgba(0,200,255,0.07)}
+  /* PAGE HEADER */
+  .page-head{position:relative;z-index:1;padding:60px 2.5rem 50px;max-width:1200px;margin:0 auto}
+  .breadcrumb{display:flex;align-items:center;gap:8px;font-size:0.75rem;font-family:'JetBrains Mono',monospace;color:var(--muted);margin-bottom:1.5rem}
+  .breadcrumb a{color:var(--muted);text-decoration:none}.breadcrumb a:hover{color:var(--text)}
+  .breadcrumb .sep{opacity:0.4}
+  .breadcrumb .current{color:var(--accent)}
+  .page-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(0,200,255,0.07);border:1px solid rgba(0,200,255,0.18);border-radius:100px;padding:5px 16px;font-size:0.75rem;font-family:'JetBrains Mono',monospace;color:var(--accent);margin-bottom:1rem;letter-spacing:0.06em}
+  .page-badge::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--accent);animation:pulse 2s ease-in-out infinite}
+  @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.3;transform:scale(0.7)}}
+  .page-head h1{font-size:clamp(2rem,4vw,3.2rem);font-weight:700;letter-spacing:-0.04em;margin-bottom:.75rem}
+  .page-head p{color:var(--muted);font-size:1rem;max-width:560px;line-height:1.75}
+  /* MAIN */
+  .main{position:relative;z-index:1;max-width:1200px;margin:0 auto;padding:0 2.5rem 100px}
+  .info-box{display:flex;gap:12px;padding:14px 18px;border-radius:10px;margin-bottom:28px;font-size:0.86rem;line-height:1.65}
+  .info-box.tip{background:rgba(0,200,255,0.06);border:1px solid rgba(0,200,255,0.15);color:#94c5d4}
+  .info-box.warn{background:rgba(249,115,22,0.06);border:1px solid rgba(249,115,22,0.15);color:#c99060}
+  .info-icon{font-size:1rem;flex-shrink:0;margin-top:2px}
+  .commands-grid{display:flex;flex-direction:column;gap:14px}
+  .step-label{display:inline-flex;align-items:center;gap:6px;font-size:0.7rem;font-family:'JetBrains Mono',monospace;color:var(--muted);margin-bottom:7px;padding:3px 10px;border-radius:4px;border:1px solid var(--border);background:var(--surface)}
+  .step-dot{width:6px;height:6px;border-radius:50%}
+  .step-dot.install{background:var(--accent)}
+  .cmd-block{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;transition:border-color 0.2s,transform 0.2s}
+  .cmd-block:hover{transform:translateX(3px);border-color:rgba(0,200,255,0.3)}
+  .cmd-header{display:flex;align-items:center;justify-content:space-between;padding:9px 16px;background:var(--surface2);border-bottom:1px solid var(--border)}
+  .cmd-dots{display:flex;gap:6px}
+  .cmd-dot{width:10px;height:10px;border-radius:50%}
+  .cmd-dot:nth-child(1){background:#ef4444}
+  .cmd-dot:nth-child(2){background:#f59e0b}
+  .cmd-dot:nth-child(3){background:#22c55e}
+  .cmd-label{font-size:0.7rem;font-family:'JetBrains Mono',monospace;color:var(--muted);letter-spacing:0.05em}
+  .copy-btn{display:flex;align-items:center;gap:6px;background:none;border:1px solid var(--border);border-radius:6px;color:var(--muted);font-size:0.7rem;font-family:'JetBrains Mono',monospace;padding:3px 10px;cursor:pointer;transition:all 0.2s}
+  .copy-btn:hover{color:var(--text);border-color:var(--text)}
+  .copy-btn.copied{color:var(--green);border-color:var(--green)}
+  .cmd-body{padding:16px 20px;background:var(--code-bg)}
+  .cmd-body pre{font-family:'JetBrains Mono',monospace;font-size:0.86rem;line-height:1.75;color:#c8d8f0;white-space:pre-wrap;word-break:break-all}
+  .kw{color:#7c3aed}.cmd{color:var(--accent)}.flag{color:#f97316}.url{color:#22c55e}.str{color:#f59e0b}.comment{color:var(--muted)}.var{color:#e879f9}
+  footer{position:relative;z-index:1;text-align:center;padding:36px 2rem;border-top:1px solid var(--border);color:var(--muted);font-size:0.78rem;font-family:'JetBrains Mono',monospace}
+  footer span{color:var(--accent)}
+  html{scroll-behavior:smooth}
+  @media(max-width:640px){.nav-links{gap:2px}.nav-pill{padding:5px 10px;font-size:0.75rem}}
+</style>
+</head>
+<body>
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+
+<nav>
+  <a href="index.html" class="nav-logo">
+    <svg viewBox="0 0 32 32" fill="none"><path d="M16 3L29 10v12L16 29 3 22V10L16 3z" fill="none" stroke="#00c8ff" stroke-width="1.5"/><path d="M16 3v26M3 10l13 6 13-6M16 16l13-6M16 16L3 10" stroke="#00c8ff" stroke-width="1" opacity="0.4"/></svg>
+    Ptero<span style="color:var(--accent)">Docs</span>
+  </a>
+  <div class="nav-links">
+    <a href="installation.html" class="nav-pill active">🚀 Install</a>
+    <a href="pterofix.html" class="nav-pill">🔧 Ptero Fix</a>
+    <a href="blueprint.html" class="nav-pill">🧩 Blueprint</a>
+  </div>
+</nav>
+
+<div class="page-head">
+  <div class="breadcrumb">
+    <a href="index.html">pterodocs</a>
+    <span class="sep">/</span>
+    <span class="current">installation</span>
+  </div>
+  <div class="page-badge">guide 01 · 8 commands</div>
+  <h1>Panel Installation</h1>
+  <p>Set up Pterodactyl Panel from scratch on a fresh Ubuntu/Debian server. Run commands in order as root.</p>
+</div>
+
+<main class="main">
+  <div class="info-box tip">
+    <span class="info-icon">💡</span>
+    <span>Requires a fresh <strong>Ubuntu 20.04+</strong> or <strong>Debian 11+</strong> server. Make sure you have root access before starting.</span>
+  </div>
+
+  <div class="commands-grid">
+
+    <div>
+      <div class="step-label"><span class="step-dot install"></span>Step 1 · Switch to Root</div>
+      <div class="cmd-block">
+        <div class="cmd-header">
+          <div class="cmd-dots"><span class="cmd-dot"></span><span class="cmd-dot"></span><span class="cmd-dot"></span></div>
+          <span class="cmd-label">bash</span>
+          <button class="copy-btn" onclick="copyCmd(this,'sudo su')"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>copy</button>
+        </div>
+        <div class="cmd-body"><pre><span class="kw">sudo</span> <span class="cmd">su</span></pre></div>
+      </div>
+    </div>
+
+    <div>
+      <div class="step-label"><span class="step-dot install"></span>Step 2 · Update Package Lists</div>
+      <div class="cmd-block">
+        <div class="cmd-header">
+          <div class="cmd-dots"><span class="cmd-dot"></span><span class="cmd-dot"></span><span class="cmd-dot"></span></div>
+          <span class="cmd-label">bash</span>
+          <button class="copy-btn" onclick="copyCmd(this,'apt update')"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>copy</button>
+        </div>
+        <div class="cmd-body"><pre><span class="cmd">apt</span> update</pre></div>
+      </div>
+    </div>
+
+    <div>
+      <div class="step-label"><span class="step-dot install"></span>Step 3 · Upgrade Packages</div>
+      <div class="cmd-block">
+        <div class="cmd-header">
+          <div class="cmd-dots"><span class="cmd-dot"></span><span class="cmd-dot"></span><span class="cmd-dot"></span></div>
+          <span class="cmd-label">bash</span>
+          <button class="copy-btn" onclick="copyCmd(this,'apt upgrade')"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>copy</button>
+        </div>
+        <div class="cmd-body"><pre><span class="cmd">apt</span> upgrade</pre></div>
+      </div>
+    </div>
+
+    <div>
+      <div class="step-label"><span class="step-dot install"></span>Step 4 · Install curl</div>
+      <div class="cmd-block">
+        <div class="cmd-header">
+          <div class="cmd-dots"><span class="cmd-dot"></span><span class="cmd-dot"></span><span class="cmd-dot"></span></div>
+          <span class="cmd-label">bash</span>
+          <button class="copy-btn" onclick="copyCmd(this,'apt install curl')"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>copy</button>
+        </div>
+        <div class="cmd-body"><pre><span class="cmd">apt</span> install <span class="str">curl</span></pre></div>
+      </div>
+    </div>
+
+    <div>
+      <div class="step-label"><span class="step-dot install"></span>Step 5 · Full System Update</div>
+      <div class="cmd-block">
+        <div class="cmd-header">
+          <div class="cmd-dots"><span class="cmd-dot"></span><span class="cmd-dot"></span><span class="cmd-dot"></span></div>
+          <span class="cmd-label">bash</span>
+          <button class="copy-btn" onclick="copyCmd(this,'sudo apt update -y && sudo apt upgrade -y')"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>copy</button>
+        </div>
+        <div class="cmd-body"><pre><span class="kw">sudo</span> <span class="cmd">apt</span> update <span class="flag">-y</span> <span class="kw">&&</span> <span class="kw">sudo</span> <span class="cmd">apt</span> upgrade <span class="flag">-y</span></pre></div>
+      </div>
+    </div>
+
+    <div>
+      <div class="step-label"><span class="step-dot install"></span>Step 6 · Configure Firewall Rules</div>
+      <div class="cmd-block">
+        <div class="cmd-header">
+          <div class="cmd-dots"><span class="cmd-dot"></span><span class="cmd-dot"></span><span class="cmd-dot"></span></div>
+          <span class="cmd-label">bash</span>
+          <button class="copy-btn" onclick="copyCmd(this,'sudo ufw allow mysql && sudo ufw allow OpenSSH && sudo ufw allow ssh && sudo ufw allow 80 && sudo ufw allow 443 && sudo ufw allow 2022 && sudo ufw allow 8080')"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>copy</button>
+        </div>
+        <div class="cmd-body"><pre><span class="kw">sudo</span> <span class="cmd">ufw</span> allow <span class="str">mysql</span> <span class="kw">&&</span>
+<span class="kw">sudo</span> <span class="cmd">ufw</span> allow <span class="str">OpenSSH</span> <span class="kw">&&</span>
+<span class="kw">sudo</span> <span class="cmd">ufw</span> allow <span class="str">ssh</span> <span class="kw">&&</span>
+<span class="kw">sudo</span> <span class="cmd">ufw</span> allow <span class="flag">80</span> <span class="kw">&&</span>
+<span class="kw">sudo</span> <span class="cmd">ufw</span> allow <span class="flag">443</span> <span class="kw">&&</span>
+<span class="kw">sudo</span> <span class="cmd">ufw</span> allow <span class="flag">2022</span> <span class="kw">&&</span>
+<span class="kw">sudo</span> <span class="cmd">ufw</span> allow <span class="flag">8080</span></pre></div>
+      </div>
+    </div>
+
+    <div>
+      <div class="step-label"><span class="step-dot install"></span>Step 7 · Enable Firewall</div>
+      <div class="cmd-block">
+        <div class="cmd-header">
+          <div class="cmd-dots"><span class="cmd-dot"></span><span class="cmd-dot"></span><span class="cmd-dot"></span></div>
+          <span class="cmd-label">bash</span>
+          <button class="copy-btn" onclick="copyCmd(this,'sudo ufw enable')"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>copy</button>
+        </div>
+        <div class="cmd-body"><pre><span class="kw">sudo</span> <span class="cmd">ufw</span> enable</pre></div>
+      </div>
+    </div>
+
+    <div>
+      <div class="step-label"><span class="step-dot install"></span>Step 8 · Run Pterodactyl Installer</div>
+      <div class="cmd-block">
+        <div class="cmd-header">
+          <div class="cmd-dots"><span class="cmd-dot"></span><span class="cmd-dot"></span><span class="cmd-dot"></span></div>
+          <span class="cmd-label">bash</span>
+          <button class="copy-btn" onclick="copyCmd(this,'bash <(curl -s https://pterodactyl-installer.se/)')"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>copy</button>
+        </div>
+        <div class="cmd-body"><pre><span class="kw">bash</span> <span class="flag">&lt;</span>(<span class="cmd">curl</span> <span class="flag">-s</span> <span class="url">https://pterodactyl-installer.se/</span>)</pre></div>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<footer>PteroDocs · <span>/installation</span> · Commands sourced from official documentation</footer>
+<script>
+function copyCmd(btn,text){navigator.clipboard.writeText(text).then(()=>{btn.classList.add('copied');btn.innerHTML='<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>copied!';setTimeout(()=>{btn.classList.remove('copied');btn.innerHTML='<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>copy'},2000)})}
+</script>
+</body>
+</html>
